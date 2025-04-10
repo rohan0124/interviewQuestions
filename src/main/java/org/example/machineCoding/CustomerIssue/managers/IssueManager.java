@@ -16,6 +16,7 @@ class IssueManager implements IssueSubject {
         if (orderId == null || issueTypeName == null || subject == null || description == null || email == null) {
             throw new IllegalArgumentException("Invalid input: null values are not allowed");
         }
+        //validator
 
         if (!Issue.IssueTypes.isValid(issueTypeName)) {
             throw new IllegalArgumentException("Invalid issue type: " + issueTypeName);
@@ -35,7 +36,7 @@ class IssueManager implements IssueSubject {
 
     public void resolveIssue(String issueId, String resolution) {
         Issue issue = allIssues.get(issueId);
-        if(issue==null) return;
+        if(issue==null) return; // throw exception
         issue.resolveIssue(resolution);
         notifyAll(issue);
     }
@@ -51,6 +52,7 @@ class IssueManager implements IssueSubject {
             return;
         }
         issue.setIssueStatus(Issue.IssueStatus.fromName(status));
+        notifyAll(issue);
         issue.setResolution(resolution);
 
     }
@@ -58,6 +60,7 @@ class IssueManager implements IssueSubject {
     public List<Issue> getIssues(Map<String, String> filter) {
         Stream<Issue> issueStream = allIssues.values().stream();
 
+        //  Class for filter type
         String emailFilter = filter.get("email");
         String typeFilterStr = filter.get("type");
         String statusFilterStr = filter.get("status"); // Added status filter key
